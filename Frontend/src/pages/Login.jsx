@@ -1,6 +1,7 @@
 import {useState} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 function Login() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -20,11 +21,12 @@ function Login() {
                 "http://localhost:5000/api/auth/login",
                 formData
             );
-            localStroage.setItem("token", response.data.token);
+            localStorage.setItem("token", response.data.token);
             alert("Login successful!");
             navigate("/dashboard");
         } catch (error) {
-            alert("Login failed. Please try again." + error.response?.data?.message || "");
+            const message = error.response?.data?.message || "Please try again.";
+            alert(`Login failed. ${message}`);
         }
     }
     return (

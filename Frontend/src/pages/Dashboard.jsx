@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");   // 🔥 added search state
+  const [searchTerm, setSearchTerm] = useState("");
   const [formData, setFormData] = useState({
     courseName: "",
     courseDescription: "",
@@ -12,25 +14,51 @@ function Dashboard() {
 
   const token = localStorage.getItem("token");
 
-  // Fetch courses when page loads
   useEffect(() => {
-    fetchCourses();
-  }, []);
+    const loadCourses = async () => {
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const response = await axios.get("http://localhost:5000/api/courses", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setCourses(response.data);
+      } catch (error) {
+        console.log(error);
+        if (error.response?.status === 401) {
+          localStorage.removeItem("token");
+          navigate("/login");
+        }
+      }
+    };
+
+    loadCourses();
+  }, [navigate, token]);
 
   const fetchCourses = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/courses",
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+    if (!token) {
+      navigate("/login");
+      return;
+    }
 
+    try {
+      const response = await axios.get("http://localhost:5000/api/courses", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setCourses(response.data);
     } catch (error) {
       console.log(error);
+      if (error.response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
     }
   };
 
@@ -45,16 +73,11 @@ function Dashboard() {
     e.preventDefault();
 
     try {
-      await axios.post(
-        "http://localhost:5000/api/courses",
-        formData,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
+      await axios.post("http://localhost:5000/api/courses", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       alert("Course created successfully");
       setFormData({
         courseName: "",
@@ -69,27 +92,28 @@ function Dashboard() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(
-        `http://localhost:5000/api/courses/${id}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
+      await axios.delete(`http://localhost:5000/api/courses/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       fetchCourses();
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
     <div>
       <h2>Dashboard</h2>
+      <button onClick={handleLogout}>Logout</button>
 
       <h3>Create Course</h3>
-
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -98,7 +122,8 @@ function Dashboard() {
           value={formData.courseName}
           onChange={handleChange}
         />
-        <br /><br />
+        <br />
+        <br />
 
         <input
           type="text"
@@ -107,7 +132,8 @@ function Dashboard() {
           value={formData.courseDescription}
           onChange={handleChange}
         />
-        <br /><br />
+        <br />
+        <br />
 
         <input
           type="text"
@@ -116,16 +142,15 @@ function Dashboard() {
           value={formData.instructor}
           onChange={handleChange}
         />
-        <br /><br />
+        <br />
+        <br />
 
         <button type="submit">Create Course</button>
       </form>
 
       <hr />
 
-    
       <h3>Search Course</h3>
-
       <input
         type="text"
         placeholder="Search by course name"
@@ -136,21 +161,18 @@ function Dashboard() {
       <hr />
 
       <h3>All Courses</h3>
-
       {courses
         .filter((course) =>
-          course.courseName
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
+          course.courseName.toLowerCase().includes(searchTerm.toLowerCase())
         )
         .map((course) => (
           <div key={course._id}>
-            <p><b>{course.courseName}</b></p>
+            <p>
+              <b>{course.courseName}</b>
+            </p>
             <p>{course.courseDescription}</p>
             <p>{course.instructor}</p>
-            <button onClick={() => handleDelete(course._id)}>
-              Delete
-            </button>
+            <button onClick={() => handleDelete(course._id)}>Delete</button>
             <hr />
           </div>
         ))}

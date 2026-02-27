@@ -31,7 +31,8 @@ function Register() {
       navigate("/login");
 
     } catch (error) {
-      alert("Registration failed. Please try again." + error.response?.data?.message || "");
+      const message = error.response?.data?.message || "Please try again.";
+      alert(`Registration failed. ${message}`);
     }
   };
 
