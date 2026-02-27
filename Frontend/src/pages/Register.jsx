@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
   const navigate = useNavigate();
@@ -37,18 +37,19 @@ function Register() {
   };
 
   return (
-    <div>
+    <div className="auth-page">
+      <div className="auth-card">
       <h2>Register</h2>
-
-      <form onSubmit={handleSubmit}>
+      <p className="auth-subtitle">Create your account to continue.</p>
+      <form onSubmit={handleSubmit} className="auth-form">
         <input
           type="text"
           name="name"
           placeholder="Enter Name"
           value={formData.name}
           onChange={handleChange}
+          className="text-input"
         />
-        <br /><br />
 
         <input
           type="email"
@@ -56,8 +57,8 @@ function Register() {
           placeholder="Enter Email"
           value={formData.email}
           onChange={handleChange}
+          className="text-input"
         />
-        <br /><br />
 
         <input
           type="password"
@@ -65,11 +66,15 @@ function Register() {
           placeholder="Enter Password"
           value={formData.password}
           onChange={handleChange}
+          className="text-input"
         />
-        <br /><br />
 
-        <button type="submit">Register</button>
+        <button type="submit" className="primary-btn">Register</button>
       </form>
+      <p className="auth-footer">
+        Already registered? <Link to="/login">Login</Link>
+      </p>
+      </div>
     </div>
   );
 }

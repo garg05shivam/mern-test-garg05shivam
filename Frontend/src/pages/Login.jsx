@@ -1,6 +1,6 @@
 import {useState} from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
     const navigate = useNavigate();
@@ -30,27 +30,33 @@ function Login() {
         }
     }
     return (
-        <div>
+        <div className="auth-page">
+            <div className="auth-card">
             <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
+            <p className="auth-subtitle">Sign in to manage your courses.</p>
+            <form onSubmit={handleSubmit} className="auth-form">
                 <input
                     type="email"
                     name="email"
                     placeholder="Enter Email"
                     value={formData.email}
                     onChange={handleChange}
+                    className="text-input"
                 />
-                <br /><br />
                 <input
                     type="password"
                     name="password"
                     placeholder="Enter Password"
                     value={formData.password}
                     onChange={handleChange}
+                    className="text-input"
                 />
-                <br /><br />
-                <button type="submit">Login</button>
+                <button type="submit" className="primary-btn">Login</button>
             </form>
+            <p className="auth-footer">
+                New user? <Link to="/register">Create an account</Link>
+            </p>
+            </div>
         </div>
     );
 }   

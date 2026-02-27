@@ -109,21 +109,23 @@ function Dashboard() {
   };
 
   return (
-    <div>
-      <h2>Dashboard</h2>
-      <button onClick={handleLogout}>Logout</button>
+    <div className="dashboard-page">
+      <div className="dashboard-header">
+        <h2>Dashboard</h2>
+        <button onClick={handleLogout} className="secondary-btn">Logout</button>
+      </div>
 
+      <section className="panel">
       <h3>Create Course</h3>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="course-form">
         <input
           type="text"
           name="courseName"
           placeholder="Course Name"
           value={formData.courseName}
           onChange={handleChange}
+          className="text-input"
         />
-        <br />
-        <br />
 
         <input
           type="text"
@@ -131,9 +133,8 @@ function Dashboard() {
           placeholder="Course Description"
           value={formData.courseDescription}
           onChange={handleChange}
+          className="text-input"
         />
-        <br />
-        <br />
 
         <input
           type="text"
@@ -141,41 +142,44 @@ function Dashboard() {
           placeholder="Instructor"
           value={formData.instructor}
           onChange={handleChange}
+          className="text-input"
         />
-        <br />
-        <br />
 
-        <button type="submit">Create Course</button>
+        <button type="submit" className="primary-btn">Create Course</button>
       </form>
+      </section>
 
-      <hr />
-
+      <section className="panel">
       <h3>Search Course</h3>
       <input
         type="text"
         placeholder="Search by course name"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        className="text-input"
       />
+      </section>
 
-      <hr />
-
+      <section className="panel">
       <h3>All Courses</h3>
+      <div className="course-list">
       {courses
         .filter((course) =>
           course.courseName.toLowerCase().includes(searchTerm.toLowerCase())
         )
         .map((course) => (
-          <div key={course._id}>
+          <div key={course._id} className="course-item">
             <p>
               <b>{course.courseName}</b>
             </p>
             <p>{course.courseDescription}</p>
             <p>{course.instructor}</p>
-            <button onClick={() => handleDelete(course._id)}>Delete</button>
-            <hr />
+            <button onClick={() => handleDelete(course._id)} className="danger-btn">Delete</button>
           </div>
         ))}
+        {courses.length === 0 && <p className="empty-state">No courses yet. Create your first one.</p>}
+      </div>
+      </section>
     </div>
   );
 }
