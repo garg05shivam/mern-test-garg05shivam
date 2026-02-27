@@ -3,6 +3,7 @@ import axios from "axios";
 
 function Dashboard() {
   const [courses, setCourses] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");   // 🔥 added search state
   const [formData, setFormData] = useState({
     courseName: "",
     courseDescription: "",
@@ -55,7 +56,12 @@ function Dashboard() {
       );
 
       alert("Course created successfully");
-      fetchCourses(); // refresh list
+      setFormData({
+        courseName: "",
+        courseDescription: "",
+        instructor: "",
+      });
+      fetchCourses();
     } catch (error) {
       console.log(error);
     }
@@ -72,7 +78,7 @@ function Dashboard() {
         }
       );
 
-      fetchCourses(); // refresh list
+      fetchCourses();
     } catch (error) {
       console.log(error);
     }
@@ -117,19 +123,37 @@ function Dashboard() {
 
       <hr />
 
+    
+      <h3>Search Course</h3>
+
+      <input
+        type="text"
+        placeholder="Search by course name"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+
+      <hr />
+
       <h3>All Courses</h3>
 
-      {courses.map((course) => (
-        <div key={course._id}>
-          <p><b>{course.courseName}</b></p>
-          <p>{course.courseDescription}</p>
-          <p>{course.instructor}</p>
-          <button onClick={() => handleDelete(course._id)}>
-            Delete
-          </button>
-          <hr />
-        </div>
-      ))}
+      {courses
+        .filter((course) =>
+          course.courseName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        )
+        .map((course) => (
+          <div key={course._id}>
+            <p><b>{course.courseName}</b></p>
+            <p>{course.courseDescription}</p>
+            <p>{course.instructor}</p>
+            <button onClick={() => handleDelete(course._id)}>
+              Delete
+            </button>
+            <hr />
+          </div>
+        ))}
     </div>
   );
 }
