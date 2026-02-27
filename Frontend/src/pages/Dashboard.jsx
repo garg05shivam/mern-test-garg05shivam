@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+
 function Dashboard() {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
@@ -22,7 +24,7 @@ function Dashboard() {
       }
 
       try {
-        const response = await axios.get("http://localhost:5000/api/courses", {
+        const response = await axios.get(`${API_BASE_URL}/api/courses`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -47,7 +49,7 @@ function Dashboard() {
     }
 
     try {
-      const response = await axios.get("http://localhost:5000/api/courses", {
+      const response = await axios.get(`${API_BASE_URL}/api/courses`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -73,7 +75,7 @@ function Dashboard() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5000/api/courses", formData, {
+      await axios.post(`${API_BASE_URL}/api/courses`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -92,7 +94,7 @@ function Dashboard() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/courses/${id}`, {
+      await axios.delete(`${API_BASE_URL}/api/courses/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
