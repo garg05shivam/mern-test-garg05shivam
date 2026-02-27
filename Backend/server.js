@@ -12,6 +12,9 @@ app.get("/", (req, res) => {
   res.send("Server is running successfully");
 });
 
+const authRoutes = require("./routes/authRoutes");
+app.use("/api/auth", authRoutes);
+
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
