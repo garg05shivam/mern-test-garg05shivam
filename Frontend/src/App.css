@@ -109,6 +109,13 @@
   padding: 1rem;
 }
 
+.search-panel {
+  position: sticky;
+  top: 0.75rem;
+  z-index: 5;
+  backdrop-filter: blur(2px);
+}
+
 .course-list {
   display: grid;
   gap: 0.75rem;

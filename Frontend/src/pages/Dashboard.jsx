@@ -115,6 +115,17 @@ function Dashboard() {
         <button onClick={handleLogout} className="secondary-btn">Logout</button>
       </div>
 
+      <section className="panel search-panel">
+      <h3>Search Course</h3>
+      <input
+        type="text"
+        placeholder="Search by course name"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="text-input"
+      />
+      </section>
+
       <section className="panel">
       <h3>Create Course</h3>
       <form onSubmit={handleSubmit} className="course-form">
@@ -147,17 +158,6 @@ function Dashboard() {
 
         <button type="submit" className="primary-btn">Create Course</button>
       </form>
-      </section>
-
-      <section className="panel">
-      <h3>Search Course</h3>
-      <input
-        type="text"
-        placeholder="Search by course name"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="text-input"
-      />
       </section>
 
       <section className="panel">
